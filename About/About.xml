@@ -7,7 +7,7 @@
     </supportedVersions>
     <packageId>madarauchiha.custommapsizes</packageId>
     <description>
-        Enabled custom map sizes
+        Enables custom map sizes through the Advanced menu on the world map during map generation.
     </description>
     <modDependencies>
         <li>
