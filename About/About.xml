@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+    <name>Custom Map Sizes</name>
+    <author>Madara Uchiha</author>
+    <supportedVersions>
+        <li>1.1</li>
+    </supportedVersions>
+    <packageId>madarauchiha.custommapsizes</packageId>
+    <description>
+        Enabled custom map sizes
+    </description>
+    <modDependencies>
+        <li>
+            <packageId>brrainz.harmony</packageId>
+            <displayName>Harmony</displayName>
+            <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+            <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+        </li>
+    </modDependencies>
+    <loadBefore>        <!-- Load this mod BEFORE: (packageId) -->
+    </loadBefore>
+    <loadAfter>
+        <li>brrainz.harmony</li>
+    </loadAfter>
+    <incompatibleWith>
+    </incompatibleWith>
+</ModMetaData>
