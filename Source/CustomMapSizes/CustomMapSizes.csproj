@@ -43,8 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HarmonyPatches\Patch_Dialog_AdvancedGameConfig.cs" />
-    <Compile Include="HarmonyPatches\Patch_Game.cs" />
-    <Compile Include="Main.cs" />
+    <Compile Include="HarmonyPatches\Patch_Game_InitNewGame.cs" />
+    <Compile Include="CustomMapSizesMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

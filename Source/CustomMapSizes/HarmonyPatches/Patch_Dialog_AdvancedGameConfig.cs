@@ -1,18 +1,14 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 
 namespace CustomMapSizes.HarmonyPatches
 {
     [HarmonyPatch(typeof(Dialog_AdvancedGameConfig), nameof(Dialog_AdvancedGameConfig.DoWindowContents))]
-    static class Patch_Dialog_AdvancedGameConfig
+    static class Patch_Dialog_AdvancedGameConfig_DoWindowContents
     {
         //public static IEnumerable<CodeInstruction> MethodReplacer(this IEnumerable<CodeInstruction> instructions, MethodBase from, MethodBase to)
         //{
@@ -35,7 +31,7 @@ namespace CustomMapSizes.HarmonyPatches
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             var from = AccessTools.Method(typeof(Listing), nameof(Listing.NewColumn));
-            var to = AccessTools.Method(typeof(Patch_Dialog_AdvancedGameConfig), nameof(NewColumnPlus));
+            var to = AccessTools.Method(typeof(Patch_Dialog_AdvancedGameConfig_DoWindowContents), nameof(NewColumnPlus));
 
             var firstHit = false;
 
@@ -56,16 +52,18 @@ namespace CustomMapSizes.HarmonyPatches
         public static void NewColumnPlus(Listing_Standard listing)
         {
             listing.Gap(10f);
-            listing.Label("Custom");
+            listing.Label("CMS_Custom".Translate());
             // Marked as deprecated. But this is what the game uses.
-            if (listing.RadioButton("W x H", Find.GameInitData.mapSize == -1))
+            string customLabel = "CMS_CustomLabel".Translate(CustomMapSizesMain.mapWidth, CustomMapSizesMain.mapHeight, CustomMapSizesMain.mapWidth * CustomMapSizesMain.mapHeight);
+            if (listing.RadioButton(customLabel, Find.GameInitData.mapSize == -1))
             {
                 Find.GameInitData.mapSize = -1;
             }
             if (Find.GameInitData.mapSize == -1)
             {
-                listing.TextFieldNumericLabeled("Height", ref Main.mapHeight, ref Main.mapHeightTooltip);
-                listing.TextFieldNumericLabeled("Width", ref Main.mapWidth, ref Main.mapWidthTooltip);
+                listing.Gap(5f);
+                listing.TextFieldNumericLabeled("CMS_Width".Translate(), ref CustomMapSizesMain.mapWidth, ref CustomMapSizesMain.mapWidthBuffer);
+                listing.TextFieldNumericLabeled("CMS_Height".Translate(), ref CustomMapSizesMain.mapHeight, ref CustomMapSizesMain.mapHeightBuffer);
             }
             listing.NewColumn();
         }

@@ -8,12 +8,12 @@ using System.Reflection;
 namespace CustomMapSizes.HarmonyPatches
 {
     [HarmonyPatch(typeof(Game), nameof(Game.InitNewGame))]
-    static class Patch_Game
+    static class Patch_Game_InitNewGame
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             var from = AccessTools.Constructor(typeof(IntVec3), new Type[] { typeof(int), typeof(int), typeof(int) });
-            var to = AccessTools.Method(typeof(Patch_Game), nameof(CreateMyCustomVector));
+            var to = AccessTools.Method(typeof(Patch_Game_InitNewGame), nameof(CreateMyCustomVector));
 
             // I could not, for the life of me, figure out how to target the correct Ldloca_S with the operand.
             // The "correct" way would be to find the one with operand == 1, but that doesn't work.
@@ -45,7 +45,7 @@ namespace CustomMapSizes.HarmonyPatches
         {
             if (x == -1 && z == -1)
             {
-                return new IntVec3(Main.mapWidth, y, Main.mapHeight);
+                return new IntVec3(CustomMapSizesMain.mapWidth, y, CustomMapSizesMain.mapHeight);
             }
             return new IntVec3(x, y, z);
         }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <CMS_Width>Width:     </CMS_Width>
+    <CMS_Height>Height:     </CMS_Height>
+    <CMS_Custom>Custom</CMS_Custom>
+    <CMS_CustomLabel>{0}x{1} ({2} cells)</CMS_CustomLabel>
+</LanguageData>
