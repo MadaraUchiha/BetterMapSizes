@@ -29,7 +29,6 @@ namespace CustomMapSizes.HarmonyPatches
                 // We will set it after our static call.
                 if (instruction.opcode == OpCodes.Ldloca_S && !encounteredFirstLdloca_S) {
                     encounteredFirstLdloca_S = true;
-                    Log.Message($"Removed the Ldloca_S! {instruction.operand}");
                     continue; 
                 }
                 yield return instruction;
