@@ -55,7 +55,10 @@ namespace CustomMapSizes.HarmonyPatches
             listing.Label("CMS_Custom".Translate());
             // Marked as deprecated. But this is what the game uses.
             string customLabel = "CMS_CustomLabel".Translate(CustomMapSizesMain.mapWidth, CustomMapSizesMain.mapHeight, CustomMapSizesMain.mapWidth * CustomMapSizesMain.mapHeight);
+#pragma warning disable 612, 618
             if (listing.RadioButton(customLabel, Find.GameInitData.mapSize == -1))
+#pragma warning restore 612, 618
+
             {
                 Find.GameInitData.mapSize = -1;
             }

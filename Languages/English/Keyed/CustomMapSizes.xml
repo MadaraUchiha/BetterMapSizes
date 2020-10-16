@@ -4,4 +4,5 @@
     <CMS_Height>Height:     </CMS_Height>
     <CMS_Custom>Custom</CMS_Custom>
     <CMS_CustomLabel>{0}x{1} ({2} cells)</CMS_CustomLabel>
+    <CMS_Settings_Description>Select the default map size for future map generations. Does not affect any existing savefiles.</CMS_Settings_Description>
 </LanguageData>
