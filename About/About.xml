@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-    <name>Custom Map Sizes</name>
+    <name>Better Map Sizes</name>
     <author>Madara Uchiha</author>
     <supportedVersions>
         <li>1.1</li>
@@ -9,6 +9,7 @@
     <packageId>madarauchiha.custommapsizes</packageId>
     <description>
         Enables custom map sizes through the Advanced menu on the world map during map generation.
+        Also allows for setting the default map size to use when generating tiles (in case you forget to use the Advanced menu)
     </description>
     <modDependencies>
         <li>
