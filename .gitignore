@@ -360,3 +360,5 @@ MigrationBackup/
 FodyWeavers.xsd
 
 0Harmony.dll
+_PublisherPlus.xml
+*.zip
