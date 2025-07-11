@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <CMS_Width>Szerokość:     </CMS_Width>
+    <CMS_Height>Wysokość:     </CMS_Height>
+    <CMS_Custom>Niestandardowa</CMS_Custom>
+    <CMS_CustomLabel>{0}x{1} ({2} komórki)</CMS_CustomLabel>
+    <CMS_Settings_Description>Wybierz domyślny rozmiar mapy. To ustawienie nie wpływa na istniejące już zapisy.</CMS_Settings_Description>
+</LanguageData>
