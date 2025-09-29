@@ -4,8 +4,8 @@ using Verse;
 
 namespace CustomMapSizes
 {
-    [HarmonyPatch(typeof(Page_SelectStartingSite), nameof(Page_SelectStartingSite.PostOpen))]
-    public static class Patch_Page_SelectStartingSite_PostOpen
+    [HarmonyPatch(typeof(Page_CreateWorldParams), nameof(Page_CreateWorldParams.PostOpen))]
+    public static class Patch_Page_CreateWorldParams_PostOpen
     {
         public static void Postfix()
         {
