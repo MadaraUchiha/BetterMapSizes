@@ -1,53 +1,74 @@
-﻿using HarmonyLib;
-using Verse;
-using System.Collections.Generic;
+using HarmonyLib;
 using System;
-using System.Reflection.Emit;
-using System.Reflection;
+using Verse;
 
 namespace CustomMapSizes.HarmonyPatches
 {
+    /// <summary>
+    /// The "Custom" option is stored as GameInitData.mapSize == -1. Vanilla builds the
+    /// starting map from new IntVec3(mapSize, 1, mapSize), so the -1 has to be replaced
+    /// before InitNewGame runs.
+    ///
+    /// This used to be a Transpiler that rewrote the IntVec3 constructor call inside
+    /// InitNewGame. That broke whenever another mod also transpiled InitNewGame (for example
+    /// Vanilla Expanded Framework): the -1 reached vanilla and map allocation threw
+    /// System.OverflowException. Prefix/Postfix patches don't depend on the method's IL,
+    /// so they keep working regardless of what other mods do to it.
+    /// </summary>
     [HarmonyPatch(typeof(Game), nameof(Game.InitNewGame))]
     static class Patch_Game_InitNewGame
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        // The exact custom size for this new game, or null when a preset size is in use.
+        internal static IntVec3? customMapSize;
+
+        // Square size handed to vanilla in place of the -1. The starting map is the
+        // GenerateMap call that receives exactly this size.
+        internal static int placeholderSize;
+
+        // True until the starting map has been given its exact custom size.
+        internal static bool startingMapPending;
+
+        public static void Prefix()
         {
-            var from = AccessTools.Constructor(typeof(IntVec3), new Type[] { typeof(int), typeof(int), typeof(int) });
-            var to = AccessTools.Method(typeof(Patch_Game_InitNewGame), nameof(CreateMyCustomVector));
+            customMapSize = null;
+            startingMapPending = false;
 
-            // I could not, for the life of me, figure out how to target the correct Ldloca_S with the operand.
-            // The "correct" way would be to find the one with operand == 1, but that doesn't work.
-            // If you know of the way, feel free to PR/tell me about it!
-            var encounteredFirstLdloca_S = false;
-
-            var replacedInstructions = instructions.MethodReplacer(from, to);
-
-            foreach (var instruction in replacedInstructions)
+            var initData = Find.GameInitData;
+            if (initData == null || initData.mapSize != -1)
             {
-                // First Ldloca_S is our vector allocation.
-                // We have replaced the constructor call with a static metho, so we should get rid of this.
-                // We will set it after our static call.
-                if (instruction.opcode == OpCodes.Ldloca_S && !encounteredFirstLdloca_S) {
-                    encounteredFirstLdloca_S = true;
-                    continue; 
-                }
-                yield return instruction;
-                // If this instruction is our static call, we should set the result to the correct local variable.
-                if (instruction.opcode == OpCodes.Call && (MethodInfo) instruction.operand == to)
-                {
-                    yield return new CodeInstruction(OpCodes.Stloc_1);
-                }
+                return;
+            }
+
+            var width = CustomMapSizesMain.mapWidth;
+            var height = CustomMapSizesMain.mapHeight;
+            if (width <= 0 || height <= 0)
+            {
+                Log.Warning($"[Better Map Sizes] Invalid custom map size {width}x{height}, using 250x250 instead.");
+                width = 250;
+                height = 250;
+            }
+
+            placeholderSize = Math.Max(width, height);
+            initData.mapSize = placeholderSize;
+            customMapSize = new IntVec3(width, 1, height);
+            startingMapPending = true;
+        }
+
+        public static void Postfix()
+        {
+            // New settlements founded later in the game use the world's initial map size.
+            // Vanilla set it from the square placeholder, so store the real width x height.
+            if (customMapSize.HasValue && Find.World != null)
+            {
+                Find.World.info.initialMapSize = customMapSize.Value;
             }
         }
 
-        public static IntVec3 CreateMyCustomVector(int x, int y, int z)
+        public static void Finalizer()
         {
-            if (x == -1 && z == -1)
-            {
-                return new IntVec3(CustomMapSizesMain.mapWidth, y, CustomMapSizesMain.mapHeight);
-            }
-            return new IntVec3(x, y, z);
+            // Runs even if InitNewGame throws, so the custom size can't leak into a later game.
+            customMapSize = null;
+            startingMapPending = false;
         }
     }
-
 }
